@@ -8,7 +8,9 @@ We need to build this solution serverless and auto scalable as much as possible 
 
 This solution is based on a workflow so all the process from start to end is divided into three distinctive pieces. I’ll explain the above architecture in more detail.
 1.	Source Bucket: First thing, we uploading video file in source bucket and for that, we can use pre-signed URL for a person who don’t have access to AWS account otherwise we can upload through console. Uploading the file in bucket will trigger the work flow. At this point we have two option to trigger the work flow, either video file or metadata file.
+
 a)	Source Video Option: If deployed with the workflow trigger parameter set to Video File, the CloudFormation template will configure S3 event notifications on the source S3 bucket to trigger the workflow whenever a video file (mpg, mp4, m4v, mov, or m2ts) is uploaded.
+
 b)	Source Metadata Option: If deployed with the workflow trigger parameter set to Metadata File, the S3 notification is configured to trigger the workflow whenever a JSON file is uploaded. This allows different workflow configuration to be defined for each source video processed by the workflow.
 Full list of options in Metadata File: (only required field is srcVideo)
 
