@@ -41,16 +41,32 @@ It also supports adding additional metadata, such as title, genre, or any other 
 3.	Process (Media Covert): Same again, we using step function. In this step, we are doing two simple things. First thing is “Profiler” step, which going to take that metadata which we stored in DynamoDB in last step and its going to look at the resolution of the video and based on that resolution, its going to set an encoding profile.
 
 4.	Lambda Functions: There are few lambda functions here which providing the outputs for work flow by step functions in Step-1 and Step-2 in architecture.
-	archive-source: Lambda function to tag the source video in s3 to enable the Glacier lifecycle policy.
-	custom-resource: Lambda backed CloudFormation custom resource to deploy MediaConvert templates configure S3 event notifications.
-	dynamo: Lambda function to Update DynamoDB.
-	encode: Lambda function to submit an encoding job to Elemental MediaConvert.
-	error-handler: Lambda function to handler any errors created by the workflow or MediaConvert.
-	input-validate: Lambda function to parse S3 event notifications and define the workflow parameters.
-	media-package-assets: Lambda function to ingest an asset into Media Package-VOD.
-	output-validate: Lambda function to parse MediaConvert CloudWatch Events.
-	profiler: Lambda function used to send publish and/or error notifications.
-	step-functions: Lambda function to trigger AWS Step Functions.
+	archive-source: Lambda function to tag the source video in s3 to enable the Glacier lifecycle policy.
+	
+    custom-resource: Lambda backed CloudFormation custom resource to deploy MediaConvert templates configure S3 event notifications.
+	
+    dynamo: Lambda function to Update DynamoDB.
+	
+    encode: Lambda function to submit an encoding job to Elemental MediaConvert.
+	
+    error-handler: Lambda function to handler any errors created by the workflow or MediaConvert.
+	
+    input-validate: Lambda function to parse S3 event notifications and define the workflow parameters.
+	
+    
+    media-package-assets: Lambda function to ingest an asset into Media Package-VOD.
+	
+    output-validate: Lambda function to parse MediaConvert CloudWatch Events.
+	
+    profiler: Lambda function used to send publish and/or error notifications.
+	
+    step-functions: Lambda function to trigger AWS Step Functions.
+    
+    Lambda-function for likes/dislikes: will update dynamoDB with like/dislikes number of the videos and return the updated number
+    
+    Pre-signed URL: will generate pre-signed URL for uploading the source file
+    
+    Query: will search dynamoDB for searching videos by Title, catagory or description of the video
 
 5.	DynamoDB: will store the meta data of video file which will be provided by lambda after ingesting in step-2 of architecture and will update the table after processing the media convert job in step-3 of architecture.
 
