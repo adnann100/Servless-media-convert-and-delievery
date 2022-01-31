@@ -1,0 +1,23 @@
+          import json
+          import boto3
+          import os
+          from boto3.dynamodb.conditions import Key, Attr
+          dynamodb = boto3.resource('dynamodb')
+          client = boto3.resource('dynamodb')
+          def lambda_handler(event, context):
+              table = os.environ['table']
+              response = []
+              query_response = table.query(
+              IndexName = "catagory-index",
+              KeyConditionExpression = Key('catagory').eq(event['queryStringParameters']['catagory']),
+              FilterExpression = Attr('videoTitle').contains(event['queryStringParameters']['videoTitle'])
+              )
+              for item in query_response['Items']:
+                response.append({'Title': item['videoTitle'], 'Category': item['catagory'], 'VideoLink': item['hlsUrl']})  # Response can be modified as per your table attributes/metadata
+              return {
+                'statusCode': 200,
+                'headers': {
+                    'Content-Type': 'application/json'
+                  },
+                  'body': json.dumps(response)
+                  }
