@@ -82,4 +82,5 @@ It also supports adding additional metadata, such as title, genre, or any other 
 
 
 Conclusion:
+
 This is a reference architecture which could be used as baseline to build any other capabilities as per need. For instance, we can use “AWS Interactive Video Service” at front end for live streaming and it could record live streaming and send it to S3 source bucket where we can present that streaming on demand with this solution. In other words, this is very scalable and automated solution which can be modified as per our media related needs.
