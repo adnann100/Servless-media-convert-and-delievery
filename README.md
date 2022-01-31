@@ -37,11 +37,13 @@ Full list of options in Metadata File: (only required field is srcVideo)
 
 
 It also supports adding additional metadata, such as title, genre, or any other information, we want to store in Amazon DynamoDB.
-2.	Ingest (AWS Step Function): After we upload video in S3, this will kick off our ingest process. That process will validate the input and check we can get access to it and workflow is able to get to that content, then we run an open source software “Media info” which will extract metadata from video file. Once we have that information, we will store it into our DynamoDB table. At the end of ingest process we will send a SNS notification to uploader that file has been uploaded successfully.
 
-3.	Process (Media Covert): Same again, we using step function. In this step, we are doing two simple things. First thing is “Profiler” step, which going to take that metadata which we stored in DynamoDB in last step and its going to look at the resolution of the video and based on that resolution, its going to set an encoding profile.
 
-4.	Lambda Functions: There are few lambda functions here which providing the outputs for work flow by step functions in Step-1 and Step-2 in architecture.
+2. Ingest (AWS Step Function):  After we upload video in S3, this will kick off our ingest process. That process will validate the input and check we can get access to it and workflow is able to get to that content, then we run an open source software “Media info” which will extract metadata from video file. Once we have that information, we will store it into our DynamoDB table. At the end of ingest process we will send a SNS notification to uploader that file has been uploaded successfully.
+
+3. Process (Media Covert):  Same again, we using step function. In this step, we are doing two simple things. First thing is “Profiler” step, which going to take that metadata which we stored in DynamoDB in last step and its going to look at the resolution of the video and based on that resolution, its going to set an encoding profile.
+
+4. Lambda Functions:  There are few lambda functions here which providing the outputs for work flow by step functions in Step-1 and Step-2 in architecture.
 	archive-source: Lambda function to tag the source video in s3 to enable the Glacier lifecycle policy.
 	
     custom-resource: Lambda backed CloudFormation custom resource to deploy MediaConvert templates configure S3 event notifications.
@@ -69,17 +71,17 @@ It also supports adding additional metadata, such as title, genre, or any other 
     
     Query: will search dynamoDB for searching videos by Title, catagory or description of the video
 
-5.	DynamoDB: will store the meta data of video file which will be provided by lambda after ingesting in step-2 of architecture and will update the table after processing the media convert job in step-3 of architecture.
+5. DynamoDB:  will store the meta data of video file which will be provided by lambda after ingesting in step-2 of architecture and will update the table after processing the media convert job in step-3 of architecture.
 
-6.	Cloud Watch: After encoding job finished, it will send logs in cloud watch
+6. Cloud Watch:  After encoding job finished, it will send logs in cloud watch
 
-7.	SNS: This step is associated with publishing step function in this work flow. When encoding job is finished, its gonna store that in S3. In cloud watch when it sees “Media job is completed” then its gonna kick off publishing step function which will go through and validate all the content that we were expecting is there in S3. Then its going to generate cloud front links for deliver the contents.
+7. SNS:  This step is associated with publishing step function in this work flow. When encoding job is finished, its gonna store that in S3. In cloud watch when it sees “Media job is completed” then its gonna kick off publishing step function which will go through and validate all the content that we were expecting is there in S3. Then its going to generate cloud front links for deliver the contents.
 
-8.	AWS Elemental Media Package: This is an alternative way to delivering the content in this solution. By default, we doing single file in and we are creating different encoding i.e. hls, dash, mp4 and all the bit rate version of the different formats. However, with media package, we can create just one set of content. Foer example, we can create a single set of HLS content and then use that “Media Package” to ingest that and it will do just in time packaging to then convert that content into all the different formats we might need. It will save the cost of storage, rather than storing five different formats of same video in S3, we can store on format and only convert that and deliver it when we need it. “However, there is trade off between the cost of storage and Media Packaging cost. We have to choose wisely as per our requirements. “
+8. AWS Elemental Media Package:  This is an alternative way to delivering the content in this solution. By default, we doing single file in and we are creating different encoding i.e. hls, dash, mp4 and all the bit rate version of the different formats. However, with media package, we can create just one set of content. Foer example, we can create a single set of HLS content and then use that “Media Package” to ingest that and it will do just in time packaging to then convert that content into all the different formats we might need. It will save the cost of storage, rather than storing five different formats of same video in S3, we can store on format and only convert that and deliver it when we need it. “However, there is trade off between the cost of storage and Media Packaging cost. We have to choose wisely as per our requirements. “
 
-9.	S3: This is our destination bucket which is created by cloud formation template and it will hold all the encoded files.
+9. S3:  This is our destination bucket which is created by cloud formation template and it will hold all the encoded files.
 
-10.	Cloud Front: We will deliver all the contents from destination S3 bucket through cloud front so users wouldn’t have any access to S3 bucket.
+10. Cloud Front:  We will deliver all the contents from destination S3 bucket through cloud front so users wouldn’t have any access to S3 bucket.
 
 
 Conclusion:
